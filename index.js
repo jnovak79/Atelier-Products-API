@@ -1,10 +1,13 @@
 require('dotenv').config();
+const connection = require('./dbSQL.js');
 
 const express = require('express');
 const app = express();
 const port = process.env.PORT;
 const path = require('path');
-const controllers = require('./controllers.js';)
+// const controllers = require('./controllers.js');
+
+connection.initialize();
 
 app.use(express.json());
 

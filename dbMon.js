@@ -13,7 +13,7 @@ const productSchema = new mongoose.Schema(
     category: String,
     default_price: String,
     features: [{feature: String, value: String}],
-    related_products: Number
+    related_products: [{id: Number}]
   }
 )
 
@@ -22,8 +22,8 @@ const styleSchema = new mongoose.Schema (
     'product_id': String,
     'style_id': Number,
     'name': String,
-    'original_price': Number,
-    'sale_price': Number,
+    'original_price': String,
+    'sale_price': String,
     'default?': Boolean,
     'photos': [{thumbnail_url: String, url: String}],
     'skus': [{unit_id: String, quantity: Number, size: String}]
