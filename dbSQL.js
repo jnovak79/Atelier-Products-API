@@ -69,9 +69,5 @@ let initialize = function () {
   )
 }
 
-// CREATE TABLE IF NOT EXISTS Styles (product_id INT, style_id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR (255), original_price VARCHAR (255), sale_price VARCHAR (255), [default?] BOOLEAN);
-
-// PRIMARY KEY, 'name' VARCHAR (255), 'slogan' VARCHAR (1000), 'description' VARCHAR (1000), 'category' VARCHAR (255), 'default_price' VARCHAR (255))
-
 module.exports.connection = connection;
 module.exports.initialize = initialize;
