@@ -59,7 +59,7 @@ let initialize = function () {
   connection.query (
     "CREATE TABLE IF NOT EXISTS Photos (product_id INT, "
     + "style_id INT, thumbnail_url VARCHAR (1000), "
-    + "quantity INT)",
+    + "url VARCHAR(1000))",
     function (err, results) {
       if (err) {
         return console.log(err);
