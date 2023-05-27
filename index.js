@@ -1,34 +1,64 @@
 require('dotenv').config();
-const connection = require('./dbSQL.js');
 const dbPOS = require('./dbPOS.js');
+const controllersPOS = require ('./controllersPOS.js');
 
 const express = require('express');
 const app = express();
 const port = process.env.PORT;
 const path = require('path');
-// const controllers = require('./controllers.js');
 
-// connection.initialize();
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, '../client/dist')));
+app.get('/products', (req, res) => {
+  controllersPOS.getProducts(req)
+    .then ((result) =>{
+      res.status(200).send(result);
+    }
+    )
+    .catch ((err) => {
+      console.log(err);
+      res.status(500).send('Error retrieving from database')
+    })
+})
 
+app.get('/products/:product_id', (req, res) => {
+  controllersPOS.getProductInformation (req.params.product_id)
+    .then((result) => {
+      res.status(200).send(result)
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send('Error retrieving from database')
+    })
+})
 
+app.get('/products/:product_id/styles', (req, res) => {
+  controllersPOS.getProductStyles (req.params.product_id)
+    .then((result) => {;
+      res.status(200).send(result)
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send('Error retrieving from database')
+    })
+})
+
+app.get('/products/:product_id/related', (req, res) => {
+  controllersPOS.getRelatedProducts (req.params.product_id)
+    .then((result) => {;
+      res.status(200).send(result)
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send('Error retrieving from database')
+    })
+})
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
 
 dbPOS.initialize();
-
-// dbPOS.PhotoAdd({
-//   product_id: 3,
-//   style_id: 1,
-//   thumbnail_url: 'CanCan',
-//   url: 'KillerCan'
-// })
-//   .then((result) => {console.log('SUCCESS')})
-//   .catch((err) => {console.log(err)})
 
 
