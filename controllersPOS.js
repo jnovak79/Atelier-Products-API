@@ -3,12 +3,6 @@ const { Pool } = require ('pg');
 const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const controller = {};
-// dbPOS.Product
-// dbPOS.Feature
-// dbPOS.Style
-// dbPOS.Sku
-// dbPOS.Photo
-// dbPOS.Relate
 
 controller.getProducts = async function(req) {
   let page = req.query.page || 1;
@@ -21,7 +15,7 @@ controller.getProducts = async function(req) {
     console.log(startingPoint, endingPoint);
   }
   let queryResult = await dbPOS.Product.findAll({
-    attributes: {exclude: ['createdAt', 'updatedAt']},
+    attributes: ['name', 'slogan', 'description', 'category', 'default_price', 'product_id'],
     where: {
       product_id: {
         [Op.between]: [startingPoint, endingPoint]
@@ -29,7 +23,6 @@ controller.getProducts = async function(req) {
     }
   })
   for (let product of queryResult) {
-    console.log(product);
     product.dataValues.id = product.dataValues.product_id;
     delete product.dataValues.product_id;
   }
@@ -37,89 +30,57 @@ controller.getProducts = async function(req) {
 }
 
 controller.getProductInformation = async function(id) {
-  let queryResult = await dbPOS.Product.findAll({
-    attributes: {exclude: ['createdAt', 'updatedAt']},
-    where: {
-      product_id: id
-    }
-  })
+  let queryResult = await dbPOS.Product.findByPk(id, {
+    attributes: ['name', 'slogan', 'description', 'category', 'default_price']
+  });
   let queryResultForFeatures = await dbPOS.Feature.findAll({
     attributes: ['feature', 'value'],
     where: {
       product_id: id
     }
   })
-  queryResult[0].dataValues.features = queryResultForFeatures;
-  queryResult[0].dataValues.id = queryResult[0].dataValues.product_id;
-  delete queryResult[0].dataValues.product_id;
-  return queryResult[0];
+  queryResult.dataValues.features = queryResultForFeatures;
+  queryResult.dataValues.id = queryResult.dataValues.product_id;
+  delete queryResult.dataValues.product_id;
+  return queryResult;
 }
 
 controller.getProductStyles = async function(id) {
   let queryResult = await dbPOS.Style.findAll({
-    attributes: {exclude: ['createdAt', 'updatedAt', 'product_id']},
+    attributes: ['style_id', 'name', 'original_price', 'sale_price', 'default?'],
     where: {
       product_id: id
-    }
-  })
-
-  await Promise.all(queryResult.map(async function (singleStyle) {
-    // let queryResultPhotos = await dbPOS.Photo.findAll({
-    //   attributes: {exclude: ['createdAt',
-    //   'updatedAt', 'photo_id', 'style_id']},
-    //   where: {
-    //     style_id: singleStyle.dataValues.style_id
-    //   }
-    // })
-    // let queryResultSKUS = await dbPOS.Sku.findAll({
-    //   attributes: {exclude: ['createdAt',
-    //   'updatedAt', 'style_id']},
-    //   where: {
-    //     style_id: singleStyle.dataValues.style_id
-    //   }
-    // })
-    // Style model definition
-
-    // Define the association between Style and Photo
-    dbPOS.Style.hasMany(dbPOS.Photo, { foreignKey: 'style_id' });
-    dbPOS.Photo.belongsTo(dbPOS.Style, { foreignKey: 'style_id' });
-    dbPOS.Style.hasMany(dbPOS.Sku, { foreignKey: 'style_id' });
-    dbPOS.Sku.belongsTo(dbPOS.Style, { foreignKey: 'style_id' });
-
-    let queryResultStyle = await dbPOS.Style.findByPk(singleStyle.dataValues.style_id, {
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
-      include: [
+    },
+    include: [
         {
           model: dbPOS.Photo,
-          attributes: { exclude: ['createdAt', 'updatedAt', 'photo_id', 'style_id'] },
+          attributes: ['thumbnail_url', 'url'],
         },
         {
           model: dbPOS.Sku,
-          attributes: { exclude: ['createdAt', 'updatedAt', 'style_id'] },
+          attributes: ['SKU_id', 'size', 'quantity'],
         }
-      ]
-    });
-
-    let queryResultPhotos = queryResultStyle.Photos;
-    let queryResultSKUS = queryResultStyle.Skus;
-
-    let skusValues = {};
-    for (let skusUnit in queryResultSKUS) {
-      skusValues[queryResultSKUS[skusUnit].dataValues.SKU_id] = {
-         size: queryResultSKUS[skusUnit].dataValues.size,
-         quantity: queryResultSKUS[skusUnit].dataValues.quantity
-      }
-    }
-    singleStyle.dataValues.photos = queryResultPhotos;
-    singleStyle.dataValues.skus = skusValues;
-  }))
+    ],
+  })
 
   let result = {product_id: id};
   result.results = queryResult;
+  for (let eachStyle of result.results) {
+    eachStyle.dataValues.photos = eachStyle.dataValues.Photos;
+    delete eachStyle.dataValues.Photos;
+    let skusValues = {};
+    for (let skusUnit of eachStyle.dataValues.Skus) {
+      skusValues[skusUnit.SKU_id] = {
+         size: skusUnit.size,
+         quantity: skusUnit.quantity
+      }
+    }
+    eachStyle.dataValues.Skus = skusValues;
+  }
+
   return result;
 }
-// parameters are product id
-// integers
+
 
 controller.getRelatedProducts = async function(id) {
   let queryResult = await dbPOS.Relate.findAll({
@@ -134,7 +95,5 @@ controller.getRelatedProducts = async function(id) {
   }
   return result;
 }
-// parameters are product id
-// integers
 
 module.exports = controller;

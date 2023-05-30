@@ -28,7 +28,8 @@ db.Product = sequelize.define('Product', {
   product_id : {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
+    index: true
   },
   name: {
     type: DataTypes.STRING(255)
@@ -60,6 +61,7 @@ db.Feature = sequelize.define('Feature', {
   },
   product_id : {
     type: DataTypes.INTEGER,
+    index: true
   },
   feature: {
     type: DataTypes.STRING(255)
@@ -75,11 +77,13 @@ db.Feature = sequelize.define('Feature', {
 db.Style = sequelize.define('Style', {
   "product_id": {
     type: DataTypes.INTEGER,
+    index: true
   },
   "style_id": {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
+    index: true,
   },
   "name": {
     type: DataTypes.STRING(255)
@@ -108,6 +112,7 @@ db.Sku = sequelize.define('Sku', {
   },
   style_id : {
     type: DataTypes.INTEGER,
+    index: true
   },
   size: {
     type: DataTypes.STRING(255)
@@ -128,12 +133,13 @@ db.Photo = sequelize.define('Photo', {
   },
   style_id : {
     type: DataTypes.INTEGER,
+    index: true
   },
   thumbnail_url: {
-    type: DataTypes.STRING(100000)
+    type: DataTypes.TEXT
   },
   url: {
-    type: DataTypes.STRING(100000)
+    type: DataTypes.TEXT
   }
 })
 
@@ -165,34 +171,11 @@ db.initialize = async function () {
 // + "style_id INT, thumbnail_url VARCHAR (1000), "
 // + "url VARCHAR(1000))",
 
+db.Style.hasMany(db.Photo, { foreignKey: 'style_id' });
+db.Photo.belongsTo(db.Style, { foreignKey: 'style_id' });
+db.Style.hasMany(db.Sku, { foreignKey: 'style_id' });
+db.Sku.belongsTo(db.Style, { foreignKey: 'style_id' });
+db.Photo.hasMany(db.Sku, { foreignKey: 'style_id' });
+db.Sku.belongsTo(db.Photo, { foreignKey: 'style_id' });
+
 module.exports = db;
-
-// db.PhotoAdd = function (columns) {
-//   return db.Photo.create({
-//     product_id: columns.product_id,
-//     style_id: columns.style_id,
-//     thumbnail_url: columns.thumbnail_url,
-//     url: columns.url
-//   })
-// }
-
-
-// const seqWord = sequelize.define('Word' , {
-//   word: {
-//     type: DataTypes.STRING
-//   },
-//   definition: {
-//     type: DataTypes.STRING
-//   }
-// });
-
-// seqWord.sync({ force: true });
-
-// db.seqAddWord = function (word, definition) {
-//   return seqWord.create({
-//     word: word,
-//     definition: definition
-//   })
-// }
-
-
