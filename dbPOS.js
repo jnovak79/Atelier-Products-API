@@ -112,7 +112,12 @@ db.Sku = sequelize.define('Sku', {
   },
   style_id : {
     type: DataTypes.INTEGER,
-    index: true
+    index: true,
+    allowNull: false,
+    references: {
+      model: db.Style,
+      key: 'style_id'
+    }
   },
   size: {
     type: DataTypes.STRING(255)
@@ -133,7 +138,12 @@ db.Photo = sequelize.define('Photo', {
   },
   style_id : {
     type: DataTypes.INTEGER,
-    index: true
+    index: true,
+    allowNull: false,
+    references: {
+      model: db.Style,
+      key: 'style_id'
+    }
   },
   thumbnail_url: {
     type: DataTypes.TEXT
@@ -150,7 +160,8 @@ db.Relate = sequelize.define('Relate', {
     primaryKey: true,
   },
   current_product_id : {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    index: true
   },
   related_product_id: {
     type: DataTypes.INTEGER

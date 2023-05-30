@@ -14,14 +14,27 @@ controller.getProducts = async function(req) {
     endingPoint = Number(startingPoint) + Number(count);
     console.log(startingPoint, endingPoint);
   }
+  // let queryResult = await dbPOS.Product.findAll({
+  //   attributes: ['name', 'slogan', 'description', 'category', 'default_price', 'product_id'],
+  //   where: {
+  //     product_id: {
+  //       [Op.between]: [startingPoint, endingPoint]
+  //     }
+  //   }
+  // })
   let queryResult = await dbPOS.Product.findAll({
     attributes: ['name', 'slogan', 'description', 'category', 'default_price', 'product_id'],
     where: {
       product_id: {
-        [Op.between]: [startingPoint, endingPoint]
+        [Op.gte]: startingPoint
       }
-    }
-  })
+    },
+    order: [
+      ['product_id', 'ASC']
+    ],
+    limit: 15
+  });
+
   for (let product of queryResult) {
     product.dataValues.id = product.dataValues.product_id;
     delete product.dataValues.product_id;
@@ -75,25 +88,25 @@ controller.getProductStyles = async function(id) {
          quantity: skusUnit.quantity
       }
     }
-    eachStyle.dataValues.Skus = skusValues;
+    delete eachStyle.dataValues.Skus;
+    eachStyle.dataValues.skus = skusValues;
   }
 
   return result;
 }
 
 
-controller.getRelatedProducts = async function(id) {
+controller.getRelatedProducts = async function (id) {
   let queryResult = await dbPOS.Relate.findAll({
-    attributes: {exclude: ['createdAt', 'updatedAt']},
+    attributes: ['related_product_id'],
     where: {
       current_product_id: id
-    }
-  })
-  let result = [];
-  for (let relatedProduct of queryResult) {
-    result.push(relatedProduct.dataValues.related_product_id);
-  }
+    },
+    raw: true
+  });
+
+  let result = queryResult.map((relatedProduct) => relatedProduct.related_product_id);
   return result;
-}
+};
 
 module.exports = controller;
