@@ -10,8 +10,8 @@ const sequelize = new Sequelize({
   port: process.env.SQLPORT,
   host: process.env.DB_HOST,
   dialect: 'postgres',
-  benchmark: true,
-  logging: true
+  // benchmark: true,
+  logging: false
 });
 
 let testSequelize = async function() {
