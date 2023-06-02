@@ -51,13 +51,13 @@ app.get('/products/:product_id/related', (req, res) => {
     })
 })
 
+app.get('/loaderio-5572b5e36e0ca462d30fc730514db68f', (req, res) => {
+  res.status(200).send('loaderio-5572b5e36e0ca462d30fc730514db68f')
+});
+
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })
-
-app.get('/loaderio-5572b5e36e0ca462d30fc730514db68f.txt', (req, res) => {
-  res.status(200).send('loaderio-5572b5e36e0ca462d30fc730514db68f')
-});
 
 dbPOS.initialize();
 
