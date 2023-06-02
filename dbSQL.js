@@ -15,7 +15,7 @@ let initialize = function () {
     + "default_price VARCHAR (255))",
     function(err, results) {
       if (err) {
-        return console.log(err);
+        return;
       }
       return console.log('Products Table Created');
     }
@@ -26,7 +26,7 @@ let initialize = function () {
     + "feature VARCHAR (255), value VARCHAR (255))",
     function (err, results) {
       if (err) {
-        return console.log(err);
+        return;
       }
       return console.log('Features Table Created')
     }
@@ -39,7 +39,7 @@ let initialize = function () {
     + "sale_price VARCHAR (255), `default?` BOOLEAN)",
     function (err, results) {
       if (err) {
-        return console.log(err);
+        return;
       }
       return console.log('Styles Table Created')
     }
@@ -50,7 +50,7 @@ let initialize = function () {
     + "style_id INT, size VARCHAR (255), quantity VARCHAR (255))",
     function (err, results) {
       if (err) {
-        return console.log(err);
+        return;
       }
       return console.log('SKUS Table Created')
     }
@@ -62,7 +62,7 @@ let initialize = function () {
     + "url VARCHAR(1000))",
     function (err, results) {
       if (err) {
-        return console.log(err);
+        return;
       }
       return console.log('Photos Table Created')
     }
