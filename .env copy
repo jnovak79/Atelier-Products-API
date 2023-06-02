@@ -1,3 +1,10 @@
-SERVER_PORT = 3005
+DATABASE =
+SQLPASSWORD =
+SQLUSERNAME =
+SQLPORT =
+PORT =
+DB_NAME=
+DB_HOST=
+
 
 API_URL = https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfe

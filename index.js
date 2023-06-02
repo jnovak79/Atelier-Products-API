@@ -17,8 +17,7 @@ app.get('/products', (req, res) => {
     }
     )
     .catch ((err) => {
-      console.log(err);
-      res.status(500).send('Error retrieving from database')
+      res.status(500).send('Error retrieving from database');
     })
 })
 
@@ -28,8 +27,7 @@ app.get('/products/:product_id', (req, res) => {
       res.status(200).send(result)
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).send('Error retrieving from database')
+      res.status(500).send('Error retrieving from database');
     })
 })
 
@@ -39,8 +37,7 @@ app.get('/products/:product_id/styles', (req, res) => {
       res.status(200).send(result)
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).send('Error retrieving from database')
+      res.status(500).send('Error retrieving from database');
     })
 })
 
@@ -50,8 +47,7 @@ app.get('/products/:product_id/related', (req, res) => {
       res.status(200).send(result)
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).send('Error retrieving from database')
+      res.status(500).send('Error retrieving from database');
     })
 })
 

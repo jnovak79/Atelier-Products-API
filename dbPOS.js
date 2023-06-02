@@ -8,8 +8,10 @@ const sequelize = new Sequelize({
   password: process.env.SQLPASSWORD,
   database: process.env.DATABASE,
   port: process.env.SQLPORT,
-  host: 'localhost',
+  host: process.env.DB_HOST,
   dialect: 'postgres',
+  benchmark: true,
+  logging: true
 });
 
 let testSequelize = async function() {
@@ -18,7 +20,7 @@ let testSequelize = async function() {
       console.log('Connection has been established successfully.');
     })
     .catch ((error) => {
-    console.error('Unable to connect to the database:', error);
+    console.error('Unable to connect to the database:');
   })
 }
 
@@ -45,6 +47,14 @@ db.Product = sequelize.define('Product', {
   },
   default_price: {
     type: DataTypes.STRING(255)
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
   }
 })
 
@@ -69,6 +79,14 @@ db.Feature = sequelize.define('Feature', {
   value: {
     type: DataTypes.STRING(255)
   },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  }
 })
 
 // "CREATE TABLE IF NOT EXISTS Features (id INT, "
@@ -96,6 +114,14 @@ db.Style = sequelize.define('Style', {
   },
   "default?": {
     type: DataTypes.BOOLEAN
+  },
+  "updatedAt": {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  "createdAt": {
+    type: DataTypes.DATE,
+    allowNull: true,
   }
 })
 
@@ -114,16 +140,20 @@ db.Sku = sequelize.define('Sku', {
     type: DataTypes.INTEGER,
     index: true,
     allowNull: false,
-    references: {
-      model: db.Style,
-      key: 'style_id'
-    }
   },
   size: {
     type: DataTypes.STRING(255)
   },
   quantity: {
     type: DataTypes.STRING(255)
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
   }
 })
 
@@ -140,16 +170,20 @@ db.Photo = sequelize.define('Photo', {
     type: DataTypes.INTEGER,
     index: true,
     allowNull: false,
-    references: {
-      model: db.Style,
-      key: 'style_id'
-    }
   },
   thumbnail_url: {
     type: DataTypes.TEXT
   },
   url: {
     type: DataTypes.TEXT
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
   }
 })
 
@@ -165,6 +199,14 @@ db.Relate = sequelize.define('Relate', {
   },
   related_product_id: {
     type: DataTypes.INTEGER
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
   }
 })
 
@@ -186,7 +228,7 @@ db.Style.hasMany(db.Photo, { foreignKey: 'style_id' });
 db.Photo.belongsTo(db.Style, { foreignKey: 'style_id' });
 db.Style.hasMany(db.Sku, { foreignKey: 'style_id' });
 db.Sku.belongsTo(db.Style, { foreignKey: 'style_id' });
-db.Photo.hasMany(db.Sku, { foreignKey: 'style_id' });
-db.Sku.belongsTo(db.Photo, { foreignKey: 'style_id' });
+db.Product.hasMany(db.Feature, { foreignKey: 'product_id' });
+db.Feature.belongsTo(db.Product, { foreignKey: 'product_id'});
 
 module.exports = db;

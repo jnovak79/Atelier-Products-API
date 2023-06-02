@@ -12,16 +12,7 @@ controller.getProducts = async function(req) {
   if (req.query.page) {
     startingPoint = (startingPoint + (req.query.page - 1) * req.query.count);
     endingPoint = Number(startingPoint) + Number(count);
-    console.log(startingPoint, endingPoint);
   }
-  // let queryResult = await dbPOS.Product.findAll({
-  //   attributes: ['name', 'slogan', 'description', 'category', 'default_price', 'product_id'],
-  //   where: {
-  //     product_id: {
-  //       [Op.between]: [startingPoint, endingPoint]
-  //     }
-  //   }
-  // })
   let queryResult = await dbPOS.Product.findAll({
     attributes: ['name', 'slogan', 'description', 'category', 'default_price', 'product_id'],
     where: {
