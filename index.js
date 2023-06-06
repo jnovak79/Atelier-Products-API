@@ -51,8 +51,8 @@ app.get('/products/:product_id/related', (req, res) => {
     })
 })
 
-app.get('/loaderio-5572b5e36e0ca462d30fc730514db68f', (req, res) => {
-  res.status(200).send('loaderio-5572b5e36e0ca462d30fc730514db68f')
+app.get('/loaderio-b7b615b9c47c50519d5ac3e70558e6f4', (req, res) => {
+  res.status(200).send('loaderio-b7b615b9c47c50519d5ac3e70558e6f4')
 });
 
 app.listen(port, () => {
