@@ -10,8 +10,7 @@ const sequelize = new Sequelize({
   port: process.env.SQLPORT,
   host: process.env.DB_HOST,
   dialect: 'postgres',
-  // benchmark: true,
-  logging: false
+  benchmark: true,
 });
 
 let testSequelize = async function() {
@@ -58,16 +57,12 @@ db.Product = sequelize.define('Product', {
   }
 })
 
-// "CREATE TABLE IF NOT EXISTS Products (id INT AUTO_INCREMENT "
-// + "PRIMARY KEY, name VARCHAR (255), slogan VARCHAR (1000), "
-// + "description VARCHAR (1000), category VARCHAR (255), "
-// + "default_price VARCHAR (255))",
-
 db.Feature = sequelize.define('Feature', {
   feature_id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
+    index: true
   },
   product_id : {
     type: DataTypes.INTEGER,
@@ -88,9 +83,6 @@ db.Feature = sequelize.define('Feature', {
     allowNull: true,
   }
 })
-
-// "CREATE TABLE IF NOT EXISTS Features (id INT, "
-// + "feature VARCHAR (255), value VARCHAR (255))",
 
 db.Style = sequelize.define('Style', {
   "product_id": {
@@ -125,11 +117,6 @@ db.Style = sequelize.define('Style', {
   }
 })
 
-// "CREATE TABLE IF NOT EXISTS Styles (product_id INT, "
-// + "style_id INT AUTO_INCREMENT PRIMARY KEY, "
-// + "name VARCHAR (255), original_price VARCHAR (255), "
-// + "sale_price VARCHAR (255), `default?` BOOLEAN)",
-
 db.Sku = sequelize.define('Sku', {
   SKU_id: {
     type: DataTypes.INTEGER,
@@ -156,9 +143,6 @@ db.Sku = sequelize.define('Sku', {
     allowNull: true,
   }
 })
-
-// "CREATE TABLE IF NOT EXISTS SKUS (product_id INT, "
-// + "style_id INT, size VARCHAR (255), quantity VARCHAR (255))",
 
 db.Photo = sequelize.define('Photo', {
   photo_id: {
@@ -219,10 +203,6 @@ db.initialize = async function () {
   await db.Photo.sync();
   await db.Relate.sync();
 }
-
-// "CREATE TABLE IF NOT EXISTS Photos (product_id INT, "
-// + "style_id INT, thumbnail_url VARCHAR (1000), "
-// + "url VARCHAR(1000))",
 
 db.Style.hasMany(db.Photo, { foreignKey: 'style_id' });
 db.Photo.belongsTo(db.Style, { foreignKey: 'style_id' });
