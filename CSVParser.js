@@ -15,7 +15,6 @@ const pool = new Pool ({
   host: 'localhost'
 })
 
-
 // Copying a database into postgreSQL Skus
 // COPY "Skus"("SKU_id", "style_id", "size", "quantity") FROM '(PathToCSV)' DELIMITER ',' CSV HEADER
 
